@@ -1,3 +1,4 @@
+from re import findall
 
 grammar_v4 = {
     ('S', 'automata'): ['A', 'B', 'V'],
@@ -16,11 +17,8 @@ grammar_v4 = {
     ('D', 'digit'): ['digit']
 }
 
-terminals = set([key[1] for key in grammar_v4.keys()])
-reserved_words = ['automata', 'alfabeto', 'aceptacion', 'fin']
 
-
-def organizer(words):
+def word_and_character_organizer(words):
     symbols = []
     for word in words:
         if word in reserved_words:
@@ -36,12 +34,17 @@ def organizer(words):
     return symbols
 
 
+# Terminals
+terminals = set([key[1] for key in grammar_v4.keys()])
+reserved_words = ['automata', 'alfabeto', 'aceptacion', 'fin']
+
+
 def syntax_analyzer(input_text):
     stack = ['$', 'S']
     text = str(stack) + '\n'
     input_text = input_text.strip() + ' $'
-    words = input_text.split(' ')
-    symbols = organizer(words)
+    words = findall(r'[,:;]|[^,:;\s]+', input_text)
+    symbols = word_and_character_organizer(words)
     index = 0
     while True:
         x = stack.pop()
